@@ -21,6 +21,7 @@
     "cheerio": "^1.0.0-rc.2",
     "express": "^4.15.2",
     "glob": "^7.1.2",
+    "moment": "^2.18.1",
     "node-slack": "0.0.7",
     "request": "^2.80.0"
   }
