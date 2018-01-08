@@ -12,7 +12,7 @@ module.exports = (app) => {
       if (err) return console.error(err);
 
       const data = JSON.parse(html);
-      const formattedData = data['EU'].formatted;
+      const formattedData = data.update['EU'].formatted;
 
       let reply = slack.respond(req.body, (hook) => {
         let text = 'WoW Token Price [EU] : ';
