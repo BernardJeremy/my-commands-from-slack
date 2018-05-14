@@ -1,6 +1,7 @@
 
 const request = require('request');
 const Slack = require('node-slack');
+const cheerio = require('cheerio');
 
 const link = require('./config.json').APILink;
 
@@ -12,8 +13,10 @@ module.exports = (app) => {
       if (err) return console.error(err);
 
       let data = JSON.parse(html);
+      const $ = cheerio.load(data.content.rendered);
+      const progSrc = $('img').attr('src');
       let reply = slack.respond(req.body, (hook) => {
-        let text = '<' + data.acf.thumbnail + '| Zerator\'s stream programmation>';
+        let text = '<' + progSrc + '| Zerator\'s stream schedule>';
 
         return {
           text
