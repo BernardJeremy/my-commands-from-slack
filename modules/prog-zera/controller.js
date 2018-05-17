@@ -7,23 +7,56 @@ const link = require('./config.json').APILink;
 
 const slack = new Slack();
 
+function getZeratorProgLink() {
+  return new Promise((fullfil, reject) => {
+    request(link, (err, resp, html) => {
+      try {
+        if (err) {
+          return reject(err);
+        }
+
+        const data = JSON.parse(html);
+        const $ = cheerio.load(data.content.rendered);
+        const progSrc = $('img').attr('src');
+
+        fullfil(progSrc);
+      }
+      catch(error) {
+        reject(error);
+      }
+    });
+  });
+}
+
+function formatSlackReply(content, req) {
+  const reply = slack.respond(req.body, (hook) => {
+    const text = content;
+
+    return {
+      text
+    };
+  });
+
+  return reply;
+}
+
 module.exports = (app) => {
   app.use('/progzera', (req, res) => {
-    request(link, (err, resp, html) => {
-      if (err) return console.error(err);
-
-      let data = JSON.parse(html);
-      const $ = cheerio.load(data.content.rendered);
-      const progSrc = $('img').attr('src');
-      let reply = slack.respond(req.body, (hook) => {
-        let text = '<' + progSrc + '| Zerator\'s stream schedule>';
-
-        return {
-          text
-        };
-      });
-
-      res.json(reply);
-    });
+    getZeratorProgLink().then(
+      (progSrc) => {
+        if (req.query.type) {
+          if (req.query.type === 'redirect') {
+            return res.redirect(progSrc);
+          } else if (req.query.type === 'stream') {
+            return request(progSrc).pipe(res);
+          }
+        }
+        res.json(formatSlackReply('<' + progSrc + '| Zerator\'s stream schedule>', req));
+      }
+    ).catch(
+      (error) => {
+        res.json(formatSlackReply('Error occured : ' + error, req));
+      }
+    );
   });
 }
