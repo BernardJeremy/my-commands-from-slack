@@ -19,7 +19,8 @@ function getZeratorProgLink() {
         const $ = cheerio.load(data.content.rendered);
         const progSrc = $('img').attr('src');
 
-        fullfil(progSrc);
+        //Hard-coded URL for August 2018. 
+        fullfil('https://image.ibb.co/duujTz/IMG_20180806_130232.jpg');
       }
       catch(error) {
         reject(error);
