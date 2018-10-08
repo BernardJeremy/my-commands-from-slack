@@ -19,8 +19,8 @@ function getZeratorProgLink() {
         const $ = cheerio.load(data.content.rendered);
         const progSrc = $('img').attr('src');
 
-        //Hard-coded URL for August 2018. 
-        fullfil('https://image.ibb.co/duujTz/IMG_20180806_130232.jpg');
+        //Hard-coded URL for special announcement 2018/10/08. 
+        fullfil('https://i.imgur.com/XUFznzF_d.jpg?maxwidth=640&shape=thumb&fidelity=medium');
       }
       catch(error) {
         reject(error);
